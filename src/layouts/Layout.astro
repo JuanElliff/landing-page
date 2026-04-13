@@ -7,33 +7,172 @@ interface Props {
 }
 
 const {
-  title = 'Juan Cruz Elliff — Dev + AI',
-  description = 'Construyo webs, automatizaciones y agentes AI. Rápido, sin vueltas.'
+  title = 'Juan Cruz Elliff | Desarrollador Web Freelance · Buenos Aires',
+  description = 'Desarrollador web freelance en Buenos Aires. Sitio web o landing page en menos de 48 hs, automatizaciones e inteligentes agentes AI. Entrega garantizada, sin intermediarios.',
 } = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL('/og.png', Astro.site);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': `${Astro.site}#person`,
+      name: 'Juan Cruz Elliff',
+      jobTitle: 'Desarrollador Web Freelance & Especialista en Inteligencia Artificial',
+      url: String(Astro.site),
+      email: 'elliffjuan3@gmail.com',
+      telephone: '+5492346331233',
+      image: String(ogImage),
+      sameAs: ['https://www.linkedin.com/in/elliffjuancruz'],
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Buenos Aires',
+        addressRegion: 'Ciudad Autónoma de Buenos Aires',
+        addressCountry: 'AR',
+      },
+      knowsAbout: [
+        'Desarrollo web', 'Landing pages', 'Inteligencia Artificial',
+        'Automatizaciones', 'Agentes AI', 'WhatsApp bots', 'No-code',
+      ],
+    },
+    {
+      '@type': 'ProfessionalService',
+      '@id': `${Astro.site}#business`,
+      name: 'Juan Cruz Elliff — Desarrollo Web & AI',
+      description: 'Desarrollador web freelance especializado en sitios web, landing pages, automatizaciones y agentes de atención al cliente con inteligencia artificial.',
+      url: String(Astro.site),
+      founder: { '@id': `${Astro.site}#person` },
+      email: 'elliffjuan3@gmail.com',
+      telephone: '+5492346331233',
+      priceRange: '$$',
+      areaServed: ['AR', 'UY', 'CL', 'MX', 'ES'],
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Buenos Aires',
+        addressRegion: 'Ciudad Autónoma de Buenos Aires',
+        addressCountry: 'AR',
+      },
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'Servicios de Desarrollo Web y AI',
+        itemListElement: [
+          {
+            '@type': 'Offer',
+            itemOffered: {
+              '@type': 'Service',
+              name: 'Sitio web o landing page en 48 horas',
+              description: 'Diseño y desarrollo de sitios web y landing pages desde cero, con deploy incluido, en menos de 48 horas.',
+            },
+          },
+          {
+            '@type': 'Offer',
+            itemOffered: {
+              '@type': 'Service',
+              name: 'Automatizaciones y flujos de trabajo',
+              description: 'Conexión entre herramientas, flujos automáticos y eliminación de tareas manuales repetitivas.',
+            },
+          },
+          {
+            '@type': 'Offer',
+            itemOffered: {
+              '@type': 'Service',
+              name: 'Agente de atención al cliente con AI',
+              description: 'Asistentes inteligentes que responden consultas y toman turnos 24/7 por WhatsApp o en la web.',
+            },
+          },
+        ],
+      },
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: '¿Cuánto tarda en estar listo mi sitio web?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'El proceso toma 48 horas desde el brief inicial hasta el deploy. El día 1 se define el diseño y el día 2 se entrega el sitio publicado y funcionando.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: '¿Dónde trabajás y a qué zona geográfica atendés?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Estoy basado en Buenos Aires, Argentina, pero trabajo de forma remota con clientes en toda América Latina y España.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: '¿Qué incluye el servicio de landing page?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'El servicio incluye diseño personalizado, desarrollo, textos generados con AI, adaptación a celular y publicación (deploy) en un dominio. Todo en menos de 48 horas.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: '¿Qué es un agente AI y para qué sirve?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Un agente AI es un asistente inteligente entrenado con información de tu negocio. Responde preguntas frecuentes, toma turnos y atiende clientes de forma automática las 24 horas, sin intervención humana.',
+          },
+        },
+      ],
+    },
+  ],
+};
 ---
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO primario -->
   <title>{title}</title>
   <meta name="description" content={description} />
-  <meta name="theme-color" content="#07070e" />
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+  <link rel="canonical" href={canonicalURL} />
+
+  <!-- Autoría y geo-targeting (SEO local) -->
+  <meta name="author" content="Juan Cruz Elliff" />
+  <meta name="geo.region" content="AR-C" />
+  <meta name="geo.placename" content="Buenos Aires, Argentina" />
+  <meta name="geo.position" content="-34.6037;-58.3816" />
+  <meta name="ICBM" content="-34.6037, -58.3816" />
 
   <!-- Open Graph / Social -->
   <meta property="og:type"        content="website" />
+  <meta property="og:url"         content={canonicalURL} />
+  <meta property="og:locale"      content="es_AR" />
+  <meta property="og:site_name"   content="Juan Cruz Elliff" />
   <meta property="og:title"       content={title} />
   <meta property="og:description" content={description} />
-  <meta property="og:image"       content="/og.png" />
-  <meta name="twitter:card"       content="summary_large_image" />
-  <meta name="twitter:title"      content={title} />
+  <meta property="og:image"       content={ogImage} />
+  <meta property="og:image:width"  content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt"   content="Juan Cruz Elliff — Desarrollador Web Freelance en Buenos Aires" />
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content={title} />
   <meta name="twitter:description" content={description} />
+  <meta name="twitter:image"       content={ogImage} />
 
   <!-- Favicon (inline SVG, no extra file needed) -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%237c6cff'/><stop offset='1' stop-color='%2300d4ff'/></linearGradient></defs><rect width='32' height='32' rx='8' fill='url(%23g)'/><text x='8' y='24' font-size='18' fill='white' font-family='monospace' font-weight='bold'>JC</text></svg>" />
 
+  <!-- Sitemap -->
+  <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <meta name="theme-color" content="#FAFAFA" />
+
+  <!-- Datos estructurados JSON-LD -->
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 </head>
 <body>
   <canvas id="bg-canvas"></canvas>

@@ -23,7 +23,7 @@ Proceso de trabajo:
 
 Contacto:
 - Email: elliffjuan3@gmail.com
-- WhatsApp / cel: +54 9 02346 15331233
+- WhatsApp / cel: +54 9 2346 331233
 - LinkedIn: linkedin.com/in/elliffjuancruz
 
 Reglas para responder:
