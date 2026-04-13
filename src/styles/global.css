@@ -209,10 +209,12 @@ section { padding: 120px 0; }
 .sobre-img-wrap { position: relative; }
 .sobre-img {
   width: 100%; aspect-ratio: 1; border-radius: 24px;
-  background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 50%, #EDE9FE 100%);
+  background: var(--g);
   border: 1px solid var(--border);
   display: flex; align-items: center; justify-content: center;
-  font-size: 5rem; position: relative; overflow: hidden;
+  font-size: 4rem; font-weight: 900; color: rgba(255,255,255,0.9);
+  letter-spacing: -0.04em; font-family: 'Inter', sans-serif;
+  position: relative; overflow: hidden;
 }
 .sobre-img::after {
   content: ''; position: absolute; inset: 0;
@@ -221,10 +223,9 @@ section { padding: 120px 0; }
 .sobre-img-badge {
   position: absolute; bottom: -16px; right: -16px;
   background: var(--card); border: 1px solid var(--border); border-radius: 16px;
-  padding: 16px 20px; display: flex; gap: 12px; align-items: center;
+  padding: 16px 20px; display: flex; align-items: center;
   box-shadow: 0 8px 40px rgba(0,0,0,0.08);
 }
-.sib-icon { font-size: 1.5rem; }
 .sib-text strong { display: block; font-size: 0.9rem; font-weight: 700; }
 .sib-text span { font-size: 0.72rem; color: var(--muted); }
 
@@ -333,7 +334,9 @@ section { padding: 120px 0; }
 .proj-card:hover { transform: translateY(-8px) scale(1.01); box-shadow: 0 24px 60px rgba(0,0,0,0.1); }
 .proj-thumb {
   height: 190px; display: flex; align-items: center; justify-content: center;
-  font-size: 3.5rem; position: relative; overflow: hidden;
+  font-size: 1.4rem; font-weight: 800; letter-spacing: 0.06em;
+  font-family: 'JetBrains Mono', monospace; color: rgba(255,255,255,0.35);
+  position: relative; overflow: hidden;
 }
 .pt-1 { background: linear-gradient(135deg, #1a1035, #0a1530); }
 .pt-2 { background: linear-gradient(135deg, #0a2010, #0a1a30); }
@@ -366,6 +369,12 @@ section { padding: 120px 0; }
 }
 .clink:hover { border-color: var(--border-h); transform: translateX(5px); box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
 .clink-icon { font-size: 1.2rem; }
+.clink-icon--text {
+  width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0;
+  background: var(--g); color: #fff; font-size: 0.75rem; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  letter-spacing: -0.01em; font-family: 'JetBrains Mono', monospace;
+}
 .clink-lbl { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
 .clink-val { font-size: 0.9rem; font-weight: 700; }
 
@@ -419,11 +428,13 @@ footer { padding: 44px 0; background: #0A0A0A; }
 #chat-btn {
   position: fixed; bottom: 28px; right: 28px; z-index: 200;
   width: 56px; height: 56px; border-radius: 50%;
-  background: var(--g); border: none;
+  background: var(--g); border: none; color: #fff;
   box-shadow: 0 8px 32px rgba(37,99,235,0.4);
   display: flex; align-items: center; justify-content: center;
   cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
-  font-size: 1.3rem; touch-action: manipulation;
+  font-size: 0.7rem; font-weight: 800; letter-spacing: 0.03em;
+  text-transform: lowercase; font-family: 'Inter', sans-serif;
+  touch-action: manipulation;
 }
 #chat-btn:hover { transform: scale(1.1); box-shadow: 0 12px 48px rgba(37,99,235,0.55); }
 #chat-window {

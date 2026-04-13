@@ -8,6 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 npm run dev       # start dev server at localhost:4321
 npm run build     # production build (outputs to dist/)
 npm run preview   # preview production build locally
+node scripts/gen-og.mjs  # regenerate public/og.png (1200×630 OG image)
 ```
 
 No test suite — verify changes visually with `npm run dev`.
@@ -41,6 +42,8 @@ WEB3FORMS_KEY=       # Web3Forms — powers the contact form
 ```
 
 Both are optional locally; their respective features degrade gracefully without them.
+
+Before deploying, update `SITE_URL` in `astro.config.mjs` if the production domain changes.
 
 ## Language
 

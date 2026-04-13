@@ -421,7 +421,7 @@ if (chatBtn && chatWindow) {
   chatBtn.addEventListener('click', () => {
     isOpen = !isOpen;
     chatWindow.classList.toggle('open', isOpen);
-    chatBtn.textContent = isOpen ? '✕' : '💬';
+    chatBtn.textContent = isOpen ? '✕' : 'chat';
     if (isOpen && chatMessages.children.length === 0) {
       addBotMessage('Hola! Soy el asistente de Juan Cruz. ¿En qué puedo ayudarte? Podés preguntarme sobre los servicios, precios, tiempos de entrega o cómo arrancar un proyecto.');
     }
@@ -432,7 +432,7 @@ if (chatBtn && chatWindow) {
     chatClose.addEventListener('click', () => {
       isOpen = false;
       chatWindow.classList.remove('open');
-      chatBtn.textContent = '💬';
+      chatBtn.textContent = 'chat';
     });
   }
 

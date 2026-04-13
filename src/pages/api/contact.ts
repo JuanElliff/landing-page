@@ -29,8 +29,13 @@ export const POST: APIRoute = async ({ request }) => {
         method: 'POST',
         body: formData,
       });
-      const data = await res.json();
 
+      const contentType = res.headers.get('content-type') || '';
+      if (!contentType.includes('application/json')) {
+        throw new Error(`Web3Forms returned non-JSON response (status ${res.status})`);
+      }
+
+      const data = await res.json();
       if (!data.success) {
         throw new Error(data.message || 'Error al enviar');
       }
