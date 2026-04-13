@@ -348,30 +348,33 @@ if (cform) {
     btn.disabled = true;
 
     try {
-      const res = await fetch('/api/contact', {
+      const formData = new FormData(cform);
+      formData.set('message', `Servicio: ${data.service || '—'}\n\n${data.msg}`);
+      formData.set('replyto', data.email);
+
+      const res = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: data.name, email: data.email, service: data.service, msg: data.msg }),
+        body: formData,
       });
       const json = await res.json();
 
-      if (json.ok) {
-        btn.textContent = '✓ Listo, te escribo pronto';
+      if (json.success) {
+        btn.textContent = 'Listo, te escribo pronto';
         btn.style.background = 'linear-gradient(135deg, #00b894, #00cec9)';
         cform.reset();
         setTimeout(() => {
-          btn.textContent = 'Enviar mensaje →';
+          btn.textContent = 'Enviar mensaje';
           btn.style.background = '';
           btn.disabled = false;
         }, 5000);
       } else {
-        throw new Error();
+        throw new Error(json.message);
       }
     } catch {
-      btn.textContent = '✕ Error — escribime directo';
+      btn.textContent = 'Error — escribime directo';
       btn.style.background = 'linear-gradient(135deg, #e17055, #d63031)';
       setTimeout(() => {
-        btn.textContent = 'Enviar mensaje →';
+        btn.textContent = 'Enviar mensaje';
         btn.style.background = '';
         btn.disabled = false;
       }, 4000);

@@ -35,6 +35,9 @@
       </div>
 
       <form id="cform" data-reveal data-d="2">
+        <input type="hidden" name="access_key" value={import.meta.env.WEB3FORMS_KEY || ''} />
+        <input type="hidden" name="subject" value="Nuevo contacto desde el portfolio" />
+        <input type="hidden" name="from_name" value="Portfolio Juan Cruz" />
         <div class="form-row">
           <div class="form-g">
             <label>Tu nombre</label>
