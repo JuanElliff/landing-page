@@ -1,0 +1,415 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Juan Cruz Elliff — Dev + AI',
+  description = 'Construyo webs, automatizaciones y agentes AI. Rápido, sin vueltas.'
+} = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta name="theme-color" content="#07070e" />
+
+  <!-- Open Graph / Social -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:title"       content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image"       content="/og.png" />
+  <meta name="twitter:card"       content="summary_large_image" />
+  <meta name="twitter:title"      content={title} />
+  <meta name="twitter:description" content={description} />
+
+  <!-- Favicon (inline SVG, no extra file needed) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%237c6cff'/><stop offset='1' stop-color='%2300d4ff'/></linearGradient></defs><rect width='32' height='32' rx='8' fill='url(%23g)'/><text x='8' y='24' font-size='18' fill='white' font-family='monospace' font-weight='bold'>JC</text></svg>" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <canvas id="bg-canvas"></canvas>
+  <slot />
+
+  <script is:inline>
+/* ═══════════════════════════════════
+   CANVAS BACKGROUND — GRID + PARTICLES
+═══════════════════════════════════ */
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize(); window.addEventListener('resize', resize);
+
+const isMobile = window.innerWidth < 768;
+const PARTICLE_COUNT = isMobile ? 40 : 80;
+
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * W;
+    this.y = Math.random() * H;
+    this.size = Math.random() * 1.5 + 0.3;
+    this.vx = (Math.random() - 0.5) * 0.3;
+    this.vy = (Math.random() - 0.5) * 0.3;
+    this.alpha = Math.random() * 0.12 + 0.04;
+    this.color = Math.random() > 0.5 ? '37,99,235' : '124,58,237';
+  }
+  update() {
+    this.x += this.vx; this.y += this.vy;
+    if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset();
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${this.color},${this.alpha})`;
+    ctx.fill();
+  }
+}
+
+for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(new Particle());
+
+function drawGrid() {
+  const gs = 60;
+  ctx.strokeStyle = 'rgba(0,0,0,0.04)';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < W; x += gs) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+  }
+  for (let y = 0; y < H; y += gs) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+  }
+}
+
+function drawConnections() {
+  if (isMobile) return;
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const d = Math.sqrt(dx*dx + dy*dy);
+      if (d < 120) {
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = `rgba(37,99,235,${0.05 * (1 - d/120)})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    }
+  }
+}
+
+function loop() {
+  ctx.clearRect(0, 0, W, H);
+  drawGrid();
+  particles.forEach(p => { p.update(); p.draw(); });
+  drawConnections();
+  requestAnimationFrame(loop);
+}
+loop();
+
+/* ═══════════════════════════════════
+   TERMINAL HERO ANIMATION
+═══════════════════════════════════ */
+function showTermLine(id, delay) {
+  setTimeout(() => {
+    const el = document.getElementById(id);
+    if (el) { el.style.opacity = '1'; el.style.transition = 'opacity 0.4s'; }
+  }, delay);
+}
+showTermLine('t1', 1200);
+showTermLine('t2', 2400);
+showTermLine('t3', 3600);
+showTermLine('t4', 4000);
+
+const barPct = document.getElementById('bar-pct');
+if (barPct) {
+  let p = 0;
+  const iv = setInterval(() => {
+    p = Math.min(p + 2, 100);
+    barPct.textContent = p + '%';
+    if (p >= 100) { clearInterval(iv); setTimeout(() => { p = 0; barPct.textContent = '0%'; }, 2000); }
+  }, 60);
+}
+
+/* ═══════════════════════════════════
+   SCROLL REVEAL
+═══════════════════════════════════ */
+const revObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); revObs.unobserve(e.target); } });
+}, { threshold: 0.08 });
+document.querySelectorAll('[data-reveal]').forEach(el => revObs.observe(el));
+
+/* ═══════════════════════════════════
+   COUNTER ANIMATION
+═══════════════════════════════════ */
+const countObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const el = e.target;
+    const target = parseInt(el.dataset.count);
+    const suffix = el.dataset.suffix || '';
+    const dur = 1400;
+    const start = performance.now();
+    function frame(now) {
+      const p = Math.min((now - start) / dur, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(target * ease) + suffix;
+      if (p < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+    countObs.unobserve(el);
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('[data-count]').forEach(el => countObs.observe(el));
+
+/* ═══════════════════════════════════
+   3D CARD TILT
+═══════════════════════════════════ */
+document.querySelectorAll('.srv-card, .proc-step').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const cx = rect.width / 2;
+    const cy = rect.height / 2;
+    const rx2 = (y - cy) / cy * -8;
+    const ry2 = (x - cx) / cx * 8;
+    card.style.transform = `perspective(800px) rotateX(${rx2}deg) rotateY(${ry2}deg) translateY(-6px)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = '';
+  });
+});
+
+/* ═══════════════════════════════════
+   CONTACT FORM
+═══════════════════════════════════ */
+const cform = document.getElementById('cform');
+if (cform) {
+  cform.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('sbtn');
+    const data = Object.fromEntries(new FormData(cform));
+
+    btn.textContent = 'Enviando...';
+    btn.disabled = true;
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: data.name, email: data.email, service: data.service, msg: data.msg }),
+      });
+      const json = await res.json();
+
+      if (json.ok) {
+        btn.textContent = '✓ Listo, te escribo pronto';
+        btn.style.background = 'linear-gradient(135deg, #00b894, #00cec9)';
+        cform.reset();
+        setTimeout(() => {
+          btn.textContent = 'Enviar mensaje →';
+          btn.style.background = '';
+          btn.disabled = false;
+        }, 5000);
+      } else {
+        throw new Error();
+      }
+    } catch {
+      btn.textContent = '✕ Error — escribime directo';
+      btn.style.background = 'linear-gradient(135deg, #e17055, #d63031)';
+      setTimeout(() => {
+        btn.textContent = 'Enviar mensaje →';
+        btn.style.background = '';
+        btn.disabled = false;
+      }, 4000);
+    }
+  });
+}
+
+/* ═══════════════════════════════════
+   CHAT WIDGET
+═══════════════════════════════════ */
+const chatBtn      = document.getElementById('chat-btn');
+const chatWindow   = document.getElementById('chat-window');
+const chatClose    = document.getElementById('chat-close');
+const chatMessages = document.getElementById('chat-messages');
+const chatInput    = document.getElementById('chat-input');
+const chatSend     = document.getElementById('chat-send');
+
+const CHAT_LIMIT = 800;
+
+if (chatBtn && chatWindow) {
+  let isOpen    = false;
+  let isTyping  = false;
+  let chatHistory = [];
+
+  /* ── persist across page navigations in the same tab ── */
+  function saveSession() {
+    try {
+      sessionStorage.setItem('jce_chat_history', JSON.stringify(chatHistory));
+      sessionStorage.setItem('jce_chat_html', chatMessages.innerHTML);
+    } catch {}
+  }
+  function loadSession() {
+    try {
+      const h = sessionStorage.getItem('jce_chat_history');
+      const m = sessionStorage.getItem('jce_chat_html');
+      if (h) chatHistory = JSON.parse(h);
+      if (m) chatMessages.innerHTML = m;
+    } catch {}
+  }
+  loadSession();
+
+  /* ── char counter ── */
+  if (chatInput) {
+    chatInput.setAttribute('maxlength', CHAT_LIMIT);
+  }
+
+  chatBtn.addEventListener('click', () => {
+    isOpen = !isOpen;
+    chatWindow.classList.toggle('open', isOpen);
+    chatBtn.textContent = isOpen ? '✕' : '💬';
+    if (isOpen && chatMessages.children.length === 0) {
+      addBotMessage('Hola! Soy el asistente de Juan Cruz. ¿En qué puedo ayudarte? Podés preguntarme sobre los servicios, precios, tiempos de entrega o cómo arrancar un proyecto.');
+    }
+    if (isOpen) chatInput.focus();
+  });
+
+  if (chatClose) {
+    chatClose.addEventListener('click', () => {
+      isOpen = false;
+      chatWindow.classList.remove('open');
+      chatBtn.textContent = '💬';
+    });
+  }
+
+  function addBotMessage(text) {
+    const msg = document.createElement('div');
+    msg.className = 'chat-msg bot';
+    msg.textContent = text;
+    chatMessages.appendChild(msg);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    return msg;
+  }
+
+  function addUserMessage(text) {
+    const msg = document.createElement('div');
+    msg.className = 'chat-msg user';
+    msg.textContent = text;
+    chatMessages.appendChild(msg);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  function showTyping() {
+    const typing = document.createElement('div');
+    typing.className = 'chat-msg bot chat-typing';
+    typing.id = 'typing-indicator';
+    typing.innerHTML = '<span></span><span></span><span></span>';
+    chatMessages.appendChild(typing);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  function removeTyping() {
+    const t = document.getElementById('typing-indicator');
+    if (t) t.remove();
+  }
+
+  async function sendMessage() {
+    const text = chatInput.value.trim();
+    if (!text || isTyping) return;
+
+    chatInput.value = '';
+    addUserMessage(text);
+    chatHistory.push({ role: 'user', content: text });
+    isTyping = true;
+    showTyping();
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: chatHistory }),
+      });
+
+      const contentType = res.headers.get('content-type') || '';
+
+      if (contentType.includes('text/event-stream')) {
+        /* ── streaming path ── */
+        removeTyping();
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'chat-msg bot';
+        chatMessages.appendChild(msgDiv);
+
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let fullText = '';
+        let buffer = '';
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop() || '';
+
+          for (const line of lines) {
+            if (!line.startsWith('data: ')) continue;
+            const raw = line.slice(6).trim();
+            if (raw === '[DONE]') break;
+            try {
+              const parsed = JSON.parse(raw);
+              if (parsed.text) {
+                fullText += parsed.text;
+                msgDiv.textContent = fullText;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+              }
+              if (parsed.error) {
+                msgDiv.textContent = parsed.error;
+              }
+            } catch {}
+          }
+        }
+
+        if (fullText) {
+          chatHistory.push({ role: 'assistant', content: fullText });
+          saveSession();
+        }
+      } else {
+        /* ── non-streaming fallback (e.g. API key not set) ── */
+        const data = await res.json();
+        removeTyping();
+        const reply = data.content || 'Hubo un error. Escribime directo a elliffjuan3@gmail.com.';
+        addBotMessage(reply);
+        chatHistory.push({ role: 'assistant', content: reply });
+        saveSession();
+      }
+    } catch {
+      removeTyping();
+      addBotMessage('No pude conectarme. Escribime a elliffjuan3@gmail.com o por WhatsApp.');
+    } finally {
+      isTyping = false;
+    }
+  }
+
+  chatSend.addEventListener('click', sendMessage);
+  chatInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  });
+}
+  </script>
+</body>
+</html>
