@@ -236,6 +236,11 @@ section { padding: 120px 0; }
 .sobre-title { font-size: 2.5rem; font-weight: 900; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 20px; }
 .sobre-text { color: var(--muted); line-height: 1.8; margin-bottom: 16px; font-size: 0.97rem; }
 .sobre-text strong { color: var(--text); }
+.sobre-items { display: flex; flex-direction: column; gap: 20px; margin-top: 32px; }
+.sobre-item { padding: 20px 22px; border-left: 2px solid var(--a1); background: var(--gs); border-radius: 0 8px 8px 0; }
+.sobre-item-title { font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.sobre-item-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.65; }
+
 .skill-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
 .skill-pill {
   padding: 6px 14px; border-radius: 50px;
